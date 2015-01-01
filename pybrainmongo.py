@@ -1,6 +1,6 @@
 import pymongo
 from bson.code import Code
-from pybrain.structure import LinearLayer, SigmoidLayer, RecurrentNetwork
+from pybrain.structure import LinearLayer, SigmoidLayer, RecurrentNetwork, FeedForwardNetwork
 from pybrain.tools.shortcuts import buildNetwork
 from pybrain.datasets import SupervisedDataSet, ClassificationDataSet
 from pybrain.structure.connections.shared import MotherConnection
@@ -27,6 +27,9 @@ class MongoInputLayer(MongoLayer):
 class MongoOutputLayer(MongoLayer):
    def __init__(self, value, name):
         MongoLayer.__init__(value, name) 
+
+
+
 
 #http://pybrain.org/docs/tutorial/netmodcon.html
 '''collection - mongoBase'''
@@ -55,6 +58,12 @@ class BrainMongo:
             self.model.sortModules()
             self.model.activate([1.1,2.2])
 
+    def addLayers2(self, inputs, outputs, hidden):
+       if isinstance(self, model, FeedForwardNetwork):
+            self.model.addInputModule(inputs)
+            self.model.addModel(hidden)
+            self.model.addOutputModel(outputs)
+
 
     #RNN or FFN
     def addModel(self, neuralType):
@@ -80,8 +89,6 @@ class BrainMongo:
     def classify(self, isinsert):
         if isinsert:
             self.insert({'page1':'Value'})
-
-#http://api.mongodb.org/python/2.7rc0/tutorial.html
 
 ''' Things which can be loaded from MongoDB
 typeset:[ Classification, Reinforcment, Importance,
@@ -119,8 +126,14 @@ class MongoProvide:
 
         return InnerDataSet
 
-    def classifer():
-        clsff = ClassificationDataSet(2,nb_classes=3)
+    def classifer(labels, data):
+        """ data in format (value, label)
+        """
+        clsff = ClassificationDataSet(2,class_labels=labels)
+        for d in data:
+            clsff.appendLinked(d[0], d[1])
+        clsff.calculateStatistics()
+
 
 
 class GenerateOutputParams:
